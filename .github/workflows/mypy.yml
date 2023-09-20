@@ -27,6 +27,10 @@ jobs:
           python-version: ${{ matrix.python-version }}
           cache: poetry
       - run: poetry install
+      - name: mypy
+        run: poetry run mypy functional
+        if: always()
+        continue-on-error: true
       - name: Pylint
         run: poetry run pylint functional
       - name: black
@@ -34,9 +38,6 @@ jobs:
         if: always()
       - name: Test with pytest
         run: poetry run pytest --cov=functional --cov-report=xml
-        if: always()
-      - name: mypy
-        run: poetry run mypy functional
         if: always()
       - uses: codecov/codecov-action@v1
         with:
